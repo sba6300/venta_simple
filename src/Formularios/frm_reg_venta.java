@@ -10,6 +10,7 @@ import Clases.Producto;
 import Clases.Venta;
 import Clases.VentaProducto;
 import Clases.cl_varios;
+import Controller.GenerarFS;
 import Printer.Print_Venta_Nota;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
@@ -210,6 +211,9 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
         txt_cant.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txt_cantKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txt_cantKeyTyped(evt);
             }
         });
 
@@ -539,11 +543,13 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txt_codbarraKeyTyped
 
     private void txt_cantKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantKeyPressed
-        if (txt_cant.getText().length() > 0) {
-            double cantidad = Double.parseDouble(txt_cant.getText());
-            double parcial = cantidad * producto.getPrecio();
-            txt_parcial.setText(c_varios.formato_precio(parcial));
-            btn_addproducto.requestFocus();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_cant.getText().length() > 0) {
+                double cantidad = Double.parseDouble(txt_cant.getText());
+                double parcial = cantidad * producto.getPrecio();
+                txt_parcial.setText(c_varios.formato_precio(parcial));
+                btn_addproducto.requestFocus();
+            }
         }
     }//GEN-LAST:event_txt_cantKeyPressed
 
@@ -570,7 +576,7 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
         int input = JOptionPane.showConfirmDialog(null, "Estas Seguro de Grabar?");
 
         if (input == 0) {
-            int vestado = 1;
+            int vestado = 2;
 
             obtenerDocumento();
             venta.obtener_id();
@@ -583,6 +589,9 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
             venta.setIdtido(tido.getId());
             venta.setSerie(tido.getSerie());
             venta.setNumero(tido.getNumero());
+            if (venta.getIdtido() == 1) {
+                vestado = 1;
+            }
 
             venta.setEstado(vestado);
             venta.insertar();
@@ -600,7 +609,13 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
             this.dispose();
 
             printing.setId_venta(venta.getId());
-           // printing.generar_ticket();
+            // printing.generar_ticket();
+            if (venta.getIdtido() == 3) {
+                GenerarFS generate = new GenerarFS(venta.getId());
+                generate.generar_archivos();
+                venta.setEstado(1);
+                venta.actualizarEstado();
+            }
 
             frm_reg_venta formulario = new frm_reg_venta();
             c_varios.llamar_ventana(formulario);
@@ -696,6 +711,11 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
             obtenerDocumento();
         }
     }//GEN-LAST:event_cbx_canjeItemStateChanged
+
+    private void txt_cantKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantKeyTyped
+        c_varios.solo_precio(evt);
+        c_varios.limitar_caracteres(evt, txt_cant, 5);
+    }//GEN-LAST:event_txt_cantKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

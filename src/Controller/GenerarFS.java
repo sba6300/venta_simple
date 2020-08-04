@@ -12,17 +12,10 @@ import Clases.Venta;
 import Clases.VentaProducto;
 import Clases.cl_conectar;
 import Clases.cl_varios;
-import Printer.leer_numeros;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -33,8 +26,8 @@ public class GenerarFS {
     Venta venta = new Venta();
     Empresa empresa = new Empresa();
     DocumentoSunat tido = new DocumentoSunat();
-    Numero_Letras numero_Letras=new Numero_Letras();
-    VentaProducto ventaProducto=new VentaProducto();
+    Numero_Letras numero_Letras = new Numero_Letras();
+    VentaProducto ventaProducto = new VentaProducto();
 
     cl_varios c_varios = new cl_varios();
     cl_conectar c_conectar = new cl_conectar();
@@ -49,21 +42,22 @@ public class GenerarFS {
         tido.setId(venta.getIdtido());
         tido.obtenerDatos();
         ventaProducto.setIdVenta(this.id);
-        empresa.setUrl("sunat");
+        //empresa.setUrl("sunat");
         System.out.println(empresa.toString());
     }
 
     public int getId() {
         return id;
     }
-    private void generarTRI(){
-    //1000|IGV|VAT|100.00|18.00|
-    double base =venta.getTotal() /1.18;
-    double igv =base *0.18;
-    String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".TRI";
-        String TRI ="1000|IGV|VAT|"+c_varios.formato_totales(base)+"|"+c_varios.formato_totales(igv)+"|";
-        
-         String sdirectorio = empresa.getUrl();
+
+    private void generarTRI() {
+        //1000|IGV|VAT|100.00|18.00|
+        double base = venta.getTotal() / 1.18;
+        double igv = base * 0.18;
+        String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".TRI";
+        String TRI = "1000|IGV|VAT|" + c_varios.formato_totales(base) + "|" + c_varios.formato_totales(igv);
+
+        String sdirectorio = empresa.getUrl();
         File directorio = new File(sdirectorio);
         if (!directorio.exists()) {
             directorio.mkdirs();
@@ -71,15 +65,15 @@ public class GenerarFS {
 
         FileWriter fichero = null;
         PrintWriter pw = null;
-        
+
         try {
             fichero = new FileWriter(directorio + File.separator + titulo);
             pw = new PrintWriter(fichero);
             System.out.println(TRI);
             pw.println(TRI);
         } catch (IOException ex) {
-            Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+            System.out.println(ex.getLocalizedMessage());
+        } finally {
             try {
                 if (null != fichero) {
                     fichero.close();
@@ -89,12 +83,12 @@ public class GenerarFS {
             }
         }
     }
-    private void generarLEY(){
-    //1000|SON:CIENTO DIECIOCHO CON 00/100 SOLES |
-    String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".LEY";
-    String ley="1000|SON:"+numero_Letras.Convertir(venta.getTotal()+"", true)+" |";
-        
-     
+
+    private void generarLEY() {
+        //1000|SON:CIENTO DIECIOCHO CON 00/100 SOLES |
+        String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".LEY";
+        String ley = "1000|" + numero_Letras.Convertir(venta.getTotal() + "", true) + " |";
+
         String sdirectorio = empresa.getUrl();
         File directorio = new File(sdirectorio);
         if (!directorio.exists()) {
@@ -103,15 +97,15 @@ public class GenerarFS {
 
         FileWriter fichero = null;
         PrintWriter pw = null;
-        
+
         try {
             fichero = new FileWriter(directorio + File.separator + titulo);
             pw = new PrintWriter(fichero);
             System.out.println(ley);
             pw.println(ley);
         } catch (IOException ex) {
-            Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+            System.out.println(ex.getLocalizedMessage());
+        } finally {
             try {
                 if (null != fichero) {
                     fichero.close();
@@ -120,29 +114,31 @@ public class GenerarFS {
                 e2.printStackTrace();
             }
         }
-            
+
     }
-    private void generarDET(){
+
+    private void generarDET() {
         //4A|1|44||PRODUCTO 1, 1212, 121|100.00|18.00|1000|18.00|100.00|IGV|VAT|10|18|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|118.00|100.00|0.00|
         String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".DET";
-        String detalle = ventaProducto.genDetString(); 
-     
+        String detalle = ventaProducto.genDetString().trim();
+
         String sdirectorio = empresa.getUrl();
+        System.out.println(sdirectorio);
         File directorio = new File(sdirectorio);
         if (!directorio.exists()) {
             directorio.mkdirs();
         }
         FileWriter fichero = null;
         PrintWriter pw = null;
-        
+
         try {
             fichero = new FileWriter(directorio + File.separator + titulo);
             pw = new PrintWriter(fichero);
             System.out.print(detalle);
             pw.println(detalle);
         } catch (IOException ex) {
-            Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
-        }finally {
+            System.out.println(ex.getLocalizedMessage());
+        } finally {
             try {
                 if (null != fichero) {
                     fichero.close();
@@ -151,9 +147,9 @@ public class GenerarFS {
                 e2.printStackTrace();
             }
         }
-        
-        
+
     }
+
     private void generarCAB() {
         String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".CAB";
 
@@ -168,14 +164,14 @@ public class GenerarFS {
         try {
             String tipo_cliente = "0";
 
-            if (venta.getDoc()!=null&&venta.getDoc().length() == 8) {
+            if (venta.getDoc() != null && venta.getDoc().length() == 8) {
                 tipo_cliente = "1";
             }
-            if (venta.getDoc()!=null&&venta.getDoc().length() == 11) {
+            if (venta.getDoc() != null && venta.getDoc().length() == 11) {
                 tipo_cliente = "6";
             }
 
-            if (venta.getDoc()== null||venta.getDoc().equals("")) {
+            if (venta.getDoc() == null || venta.getDoc().equals("")) {
                 venta.setDoc("0");
             }
 
@@ -185,11 +181,11 @@ public class GenerarFS {
 
             fichero = new FileWriter(directorio + File.separator + titulo);
             pw = new PrintWriter(fichero);
-            String linea = "0101 |"
+            String linea = "0101|"
                     + venta.getFecha() + "|"
                     + venta.getHora() + "|"
-                    + venta.getFecha() + "|"
-                    + "0000 |"
+                    +"-|"
+                    + "0000|"
                     + tipo_cliente + "|"
                     + venta.getDoc() + "|"
                     + venta.getNombre() + "|"
@@ -202,7 +198,7 @@ public class GenerarFS {
                     + "0|"
                     + total + "|"
                     + "2.1|"
-                    + "2.0|";
+                    + "2.0";
             System.out.println(linea);
             pw.println(linea);
         } catch (IOException e) {
@@ -219,8 +215,8 @@ public class GenerarFS {
             }
         }
     }
-    
-    public void generar_archivos () {
+
+    public void generar_archivos() {
         System.out.println(venta.toString());
         generarCAB();
         generarDET();

@@ -35,6 +35,9 @@ public class Venta {
     private String serie;
     private int numero;
     private int estado;
+    
+           private String rci = "";
+           private String trd = "";
 
     public Venta() {
     }
@@ -127,12 +130,21 @@ public class Venta {
         this.estado = estado;
     }
 
+    public String getRci() {
+        return rci;
+    }
+
+    public String getTrd() {
+        return trd;
+    }
+    
+    
+
     @Override
     public String toString() {
         return "Venta{" + "conectar=" + conectar + ", c_varios=" + c_varios + ", id=" + id + ", fecha=" + fecha + ", hora=" + hora + ", doc=" + doc + ", nombre=" + nombre + ", total=" + total + ", correo=" + correo + ", idtido=" + idtido + ", serie=" + serie + ", numero=" + numero + ", estado=" + estado + '}';
     }
 
-    
     public void obtener_id() {
         try {
             Statement st = conectar.conexion();
@@ -285,4 +297,84 @@ public class Venta {
 
     }
 
+    public void genRDIString() {
+        try {
+
+            Statement st = conectar.conexion();
+            String query = "select v.fecha, ds.cod_sunat, v.serie, v.numero, v.doc_cliente, v.total, v.estado "
+                    + "from ventas as v "
+                    + "inner join documento_sunat as ds on ds.id_tido= v.id_tido "
+                    + "where v.id_tido = 2 and v.fecha = '" + fecha + "'";
+            System.out.println(query);
+            ResultSet rs = conectar.consulta(st, query);
+
+            int item = 0;
+            while (rs.next()) {
+                item ++;
+                String tipo_cliente = "0";
+                String doc_cliente = rs.getString("doc_cliente");
+
+                if (doc_cliente != null && doc_cliente.length() == 8) {
+                    tipo_cliente = "1";
+                }
+                if (doc_cliente != null && doc_cliente.length() == 11) {
+                    tipo_cliente = "6";
+                }
+
+                if (doc_cliente == null || doc_cliente.equals("")) {
+                    doc_cliente = "0";
+                }
+
+                String vestado = "1";
+                if (rs.getString("estado").equals("3")) {
+                    vestado = "3";
+                }
+
+                double base = rs.getDouble("total") / 1.18;
+                double igv = base * 0.18;
+
+                rci += rs.getString("fecha") + "|"
+                        + fecha + "|"
+                        + rs.getString("cod_sunat") + "|"
+                        + rs.getString("serie") + "-" + rs.getString("numero") + "|"
+                        + tipo_cliente + "|"
+                        + doc_cliente + "|"
+                        + "PEN|"
+                        + c_varios.formato_numero(base) + "|"
+                        + "0|"
+                        + "0|"//10
+                        + "0|"
+                        + "0|"
+                        + "0|"
+                        + c_varios.formato_numero(rs.getDouble("total")) + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + vestado + "\n";
+                
+                
+                //generar el trd
+                
+                trd +=  item + "|"
+                        + "1000|" 
+                        + "IGV|" 
+                        + "VAT|"
+                        + c_varios.formato_numero(base) + "|"
+                        + c_varios.formato_numero(igv) + "\n";
+            }
+
+            conectar.cerrar(st);
+            conectar.cerrar(rs);
+
+            //tabla.setDefaultRenderer(Object.class, new render_tables.render_clientes());
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
 }

@@ -9,6 +9,7 @@ import Clases.Venta;
 import Clases.VentaProducto;
 import Clases.cl_varios;
 import Controller.GenerarFS;
+import Controller.GenerarResumen;
 import Printer.Print_Venta_Nota;
 
 /**
@@ -242,6 +243,7 @@ public class frm_ver_ventas extends javax.swing.JInternalFrame {
         jToolBar1.add(jButton4);
         jToolBar1.add(jSeparator1);
 
+        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/computer.png"))); // NOI18N
         jButton7.setText("Generar Fs");
         jButton7.setFocusable(false);
         jButton7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -387,8 +389,11 @@ public class frm_ver_ventas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        GenerarFS generate = new GenerarFS(venta.getId());
-        generate.generar_archivos();
+        GenerarResumen generate = new GenerarResumen(c_varios.getFechaActual());
+        generate.generarArchivos();
+
+       /* GenerarFS generate = new GenerarFS(venta.getId());
+        generate.generar_archivos();*/
     }//GEN-LAST:event_jButton7ActionPerformed
 
 

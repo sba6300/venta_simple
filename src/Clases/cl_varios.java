@@ -131,6 +131,28 @@ public class cl_varios {
 
         return m_fecha;
     }
+    
+    /**
+     * da formato a fecha suant (YYYYMMDD)
+     *
+     * @param fecha fecha a ingresar
+     * @return retorna la fecha formateada
+     */
+    public String formato_FS(String fecha) {
+        String m_fecha = null;
+
+        try {
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dt = new SimpleDateFormat("yyyyMMdd");
+            Date fec = df.parse(fecha);
+
+            m_fecha = dt.format(fec);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
+
+        return m_fecha;
+    }
 
     /**
      * da formato a hora (05:20:30 PM)

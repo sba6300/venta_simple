@@ -224,7 +224,7 @@ public class frm_menu extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         frm_reg_venta formulario = new frm_reg_venta();
-        c_varios.llamar_ventana_ancha(formulario);
+        c_varios.llamar_ventana(formulario);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
