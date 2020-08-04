@@ -32,7 +32,7 @@ public class Numero_Letras {
         if (Pattern.matches("\\d{1,9},\\d{1,2}", numero)) {
             //se divide el numero 0000000,00 -> entero y decimal
             String Num[] = numero.split(",");
-            System.out.println(numero+"-----------");
+            //System.out.println(numero+"-----------");
             //de da formato al numero decimal
             String ceros="";
             if(Num[1].length()==2){

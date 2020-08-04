@@ -42,27 +42,59 @@ public class GenerarFS {
     private int id;
 
     public GenerarFS(int id) {
-        this.id = 1;
+        this.id = id;
         venta.setId(this.id);
         venta.obtenerDatos();
         empresa.obtenerDatos();
         tido.setId(venta.getIdtido());
         tido.obtenerDatos();
         ventaProducto.setIdVenta(this.id);
+        empresa.setUrl("sunat");
+        System.out.println(empresa.toString());
     }
 
     public int getId() {
         return id;
     }
-    private void generarTRY(){
+    private void generarTRI(){
     //1000|IGV|VAT|100.00|18.00|
+    double base =venta.getTotal() /1.18;
+    double igv =base *0.18;
+    String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".TRI";
+        String TRI ="1000|IGV|VAT|"+c_varios.formato_totales(base)+"|"+c_varios.formato_totales(igv)+"|";
+        
+         String sdirectorio = empresa.getUrl();
+        File directorio = new File(sdirectorio);
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        
+        try {
+            fichero = new FileWriter(directorio + File.separator + titulo);
+            pw = new PrintWriter(fichero);
+            System.out.println(TRI);
+            pw.println(TRI);
+        } catch (IOException ex) {
+            Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
     }
     private void generarLEY(){
     //1000|SON:CIENTO DIECIOCHO CON 00/100 SOLES |
     String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".LEY";
-    String ley="1000|SON:"+numero_Letras.Convertir(venta.getTotal()+"", true)+"CON 00/100 SOLES |";
+    String ley="1000|SON:"+numero_Letras.Convertir(venta.getTotal()+"", true)+" |";
         
-        
+     
         String sdirectorio = empresa.getUrl();
         File directorio = new File(sdirectorio);
         if (!directorio.exists()) {
@@ -93,21 +125,20 @@ public class GenerarFS {
     private void generarDET(){
         //4A|1|44||PRODUCTO 1, 1212, 121|100.00|18.00|1000|18.00|100.00|IGV|VAT|10|18|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|118.00|100.00|0.00|
         String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".DET";
-        String detalle = ""; 
-        ventaProducto.genDetString(detalle);
+        String detalle = ventaProducto.genDetString(); 
+     
         String sdirectorio = empresa.getUrl();
         File directorio = new File(sdirectorio);
         if (!directorio.exists()) {
             directorio.mkdirs();
         }
-
         FileWriter fichero = null;
         PrintWriter pw = null;
         
         try {
             fichero = new FileWriter(directorio + File.separator + titulo);
             pw = new PrintWriter(fichero);
-            System.out.println(detalle);
+            System.out.print(detalle);
             pw.println(detalle);
         } catch (IOException ex) {
             Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,6 +223,8 @@ public class GenerarFS {
     public void generar_archivos () {
         System.out.println(venta.toString());
         generarCAB();
+        generarDET();
+        generarTRI();
         generarLEY();
     }
 }

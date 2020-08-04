@@ -112,7 +112,8 @@ public class VentaProducto {
         return cuenta;
     }
 
-    public void genDetString(String dataDET){
+    public String genDetString(){
+        String det="";
         try {
             
             Statement st = conectar.conexion();
@@ -121,22 +122,21 @@ public class VentaProducto {
                     + "INNER JOIN productos AS p ON p.id = pv.id_productos "
                     + "WHERE  pv.id_ventas = '" + idVenta + "'";
             ResultSet rs = conectar.consulta(st, query);
-String det=""; 
+ 
             while (rs.next()) {
-                 det += "4A|"
-                        + c_varios.formato_totales(rs.getDouble("cantidad"))+"|"
-                        + "44|"
-                        + "|"
-                        + rs.getString("nombre")+ "|"+c_varios.formato_totales(rs.getDouble("precio"))
-                        +"|18.00|"
-                        +c_varios.formato_totales(rs.getDouble("precio") / 1.18 * 0.18)+ "|18.00|100.00|IGV|VAT|10|18|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|118.00|100.00|0.00|\n";
-                Object fila[] = new Object[6];
-                fila[0] = rs.getString("id");
-                fila[1] = rs.getString("nombre");
-                fila[2] = c_varios.formato_totales(rs.getDouble("costo"));
-                fila[3] = c_varios.formato_totales(rs.getDouble("precio"));
-                fila[4] = c_varios.formato_totales(rs.getDouble("cantidad"));
-                fila[5] = c_varios.formato_totales(rs.getDouble("cantidad") * rs.getDouble("precio"));
+                double base= rs.getDouble("precio")/1.18;
+                double igv = base*0.18;
+                        
+                 det += "NIU|"+
+                         rs.getDouble("cantidad")+"|"+
+                         rs.getString("id")+"||"+
+                         rs.getString("nombre")+"|"+
+                         c_varios.formato_totales(rs.getDouble("precio"))+"|"+
+                         c_varios.formato_totales(igv)+"|1000|"+
+                         c_varios.formato_totales(igv)+"|"+c_varios.formato_totales(base)+
+                         "|IGV|VAT|10|18.00|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|"+
+                         c_varios.formato_totales(rs.getDouble("precio"))+"|"+c_varios.formato_totales(base)+"|0.00|\n";
+                
                
             }
 
@@ -148,6 +148,7 @@ String det="";
             System.out.println(ex);
             JOptionPane.showMessageDialog(null, ex);
         }
+        return det;
     }
     
     public void verVentas(JTable tabla) {

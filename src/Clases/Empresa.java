@@ -93,6 +93,11 @@ public class Empresa {
         this.url = url;
     }
 
+    @Override
+    public String toString() {
+        return "Empresa{" + "conectar=" + conectar + ", ruc=" + ruc + ", razon=" + razon + ", nombre=" + nombre + ", direccion=" + direccion + ", sucursal=" + sucursal + ", linea1=" + linea1 + ", linea2=" + linea2 + ", url=" + url + '}';
+    }
+
     public boolean actualizar() {
         boolean registrado = false;
 
