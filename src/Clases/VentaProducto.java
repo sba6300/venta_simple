@@ -112,37 +112,62 @@ public class VentaProducto {
         return cuenta;
     }
 
-    public String genDetString(){
-        String det="";
+    public String genDetString() {
+        String det = "";
         try {
-            
+
             Statement st = conectar.conexion();
             String query = "SELECT p.id, p.nombre, pv.cantidad, pv.costo, "
                     + " pv.precio FROM ventas_productos AS pv "
                     + "INNER JOIN productos AS p ON p.id = pv.id_productos "
                     + "WHERE  pv.id_ventas = '" + idVenta + "'";
             ResultSet rs = conectar.consulta(st, query);
- 
+
             while (rs.next()) {
-                double base= rs.getDouble("precio")/1.18;
-                double igv = base*0.18;
-                        
-                 det += "NIU|"+
-                         rs.getDouble("cantidad")+"|"+
-                         rs.getString("id")+"||"+
-                         rs.getString("nombre")+"|"+
-                         c_varios.formato_totales(rs.getDouble("precio"))+"|"+
-                         c_varios.formato_totales(igv)+"|1000|"+
-                         c_varios.formato_totales(igv)+"|"+c_varios.formato_totales(base)+
-                         "|IGV|VAT|10|18.00|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|"+
-                         c_varios.formato_totales(rs.getDouble("precio"))+"|"+c_varios.formato_totales(base)+"|0.00|\n";
-                
-               
+                double base = rs.getDouble("precio") / 1.18;
+                double igv = base * 0.18;
+
+                det += "NIU|"
+                        + c_varios.formato_numero(rs.getDouble("cantidad")) + "|"
+                        + rs.getString("id") + "|"
+                        + "-|"
+                        + rs.getString("nombre") + "|"
+                        + c_varios.formato_numero(rs.getDouble("precio")) + "|"
+                        + c_varios.formato_numero(igv) + "|"
+                        + "1000|" //igv
+                        + c_varios.formato_numero(igv) + "|"
+                        + c_varios.formato_numero(base) + "|"
+                        + "IGV|"
+                        + "VAT|"
+                        + "10|"
+                        + "18.00|"
+                        + "-|" //isc
+                        + "0.00|"
+                        + "0.00|"
+                        + "|"
+                        + "|"
+                        + "|"
+                        + "0|"
+                        + "-|" //9999
+                        + "0.00|"
+                        + "0.00|"
+                        + "|"
+                        + "|"
+                        + "0|"
+                        + "-|" //icbper 28
+                        + "0.00|"
+                        + "0|"
+                        + "ICBPER|"
+                        + "OTH|"
+                        + "0|"
+                        + c_varios.formato_numero(rs.getDouble("precio")) + "|"  //precioventaunit
+                        + c_varios.formato_numero(base) + "|"
+                        + "0.0000000000\n";
             }
 
             conectar.cerrar(st);
             conectar.cerrar(rs);
-            
+
             //tabla.setDefaultRenderer(Object.class, new render_tables.render_clientes());
         } catch (SQLException ex) {
             System.out.println(ex);
@@ -150,7 +175,7 @@ public class VentaProducto {
         }
         return det;
     }
-    
+
     public void verVentas(JTable tabla) {
         try {
             DefaultTableModel mostrar = new DefaultTableModel() {
@@ -162,7 +187,7 @@ public class VentaProducto {
             Statement st = conectar.conexion();
             String query = "SELECT v.fecha, sum(v.total) as suma FROM ventas_productos AS pv "
                     + "INNER JOIN ventas AS v ON v.id = pv.id_ventas "
-                    + "WHERE  strftime('%m', v.fecha) = strftime('%m', CURRENT_DATE) and v.estado != 3 "
+                    + "WHERE  strftime('%m', v.fecha) = strftime('%m', CURRENT_DATE) "
                     + "group by v.fecha ";
             ResultSet rs = conectar.consulta(st, query);
 
@@ -195,7 +220,6 @@ public class VentaProducto {
         }
     }
 
-    
     public void verFilas(JTable tabla) {
         try {
             DefaultTableModel mostrar = new DefaultTableModel() {
@@ -254,5 +278,4 @@ public class VentaProducto {
         }
     }
 
-    
 }
