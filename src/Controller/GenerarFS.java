@@ -19,6 +19,8 @@ import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -54,8 +56,36 @@ public class GenerarFS {
     }
     private void generarLEY(){
     //1000|SON:CIENTO DIECIOCHO CON 00/100 SOLES |
+    String titulo = empresa.getRuc() + "-" + tido.getCodsunat() + "-" + venta.getSerie() + "-" + venta.getNumero() + ".LEY";
     String ley="1000|SON:"+numero_Letras.Convertir(venta.getTotal()+"", true)+"CON 00/100 SOLES |";
-        System.out.println(numero_Letras.Convertir(venta.getTotal()+"", true));
+        
+        
+        String sdirectorio = empresa.getUrl();
+        File directorio = new File(sdirectorio);
+        if (!directorio.exists()) {
+            directorio.mkdirs();
+        }
+
+        FileWriter fichero = null;
+        PrintWriter pw = null;
+        
+        try {
+            fichero = new FileWriter(directorio + File.separator + titulo);
+            pw = new PrintWriter(fichero);
+            System.out.println(ley);
+            pw.println(ley);
+        } catch (IOException ex) {
+            Logger.getLogger(GenerarFS.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                if (null != fichero) {
+                    fichero.close();
+                }
+            } catch (IOException e2) {
+                e2.printStackTrace();
+            }
+        }
+            
     }
     private void generarDET(){
         //4A|1|44||PRODUCTO 1, 1212, 121|100.00|18.00|1000|18.00|100.00|IGV|VAT|10|18|0000|0.00|0.00|||01|0|-|0.00|0.00|||0|118.00|100.00|0.00|

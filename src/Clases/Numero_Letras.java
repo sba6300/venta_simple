@@ -34,7 +34,16 @@ public class Numero_Letras {
             String Num[] = numero.split(",");
             System.out.println(numero+"-----------");
             //de da formato al numero decimal
-            parte_decimal = "y " + Num[1] + "/100 Soles.";
+            String ceros="";
+            if(Num[1].length()==2){
+                ceros= Num[1];
+    
+            }else if(Num[1].length()==1){
+                ceros = Num[1]+"0";
+            }else{
+                ceros="00";
+            }
+            parte_decimal = "CON "  +ceros+ "/100 Soles.";
             //se convierte el numero a literal
             if (Integer.parseInt(Num[0]) == 0) {//si el valor es cero
                 literal = "cero ";
