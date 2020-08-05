@@ -202,6 +202,20 @@ public class Venta {
 
         return registrado;
     }
+     public boolean cambiarEstadoAyer() {
+        boolean registrado = false;
+
+        Statement st = conectar.conexion();
+        String query = "update ventas set estado = '1' "
+                + "where estado = 2 and fecha = strftime('%Y-%m-%d', datetime('now','-1 day')) and id_tido = 2";
+        int resultado = conectar.actualiza(st, query);
+        if (resultado > -1) {
+            registrado = true;
+        }
+        conectar.cerrar(st);
+
+        return registrado;
+    }
 
     public void verFilas(JTable tabla, String query) {
         try {
@@ -304,7 +318,7 @@ public class Venta {
             String query = "select v.fecha, ds.cod_sunat, v.serie, v.numero, v.doc_cliente, v.total, v.estado "
                     + "from ventas as v "
                     + "inner join documento_sunat as ds on ds.id_tido= v.id_tido "
-                    + "where v.id_tido = 2 and v.fecha = '" + fecha + "'";
+                    + "where v.id_tido = 2 and v.fecha = strftime('%Y-%m-%d', datetime('now','-1 day'))";
             System.out.println(query);
             ResultSet rs = conectar.consulta(st, query);
 
@@ -367,6 +381,8 @@ public class Venta {
                         + c_varios.formato_numero(base) + "|"
                         + c_varios.formato_numero(igv) + "\n";
             }
+            
+            cambiarEstadoAyer();
 
             conectar.cerrar(st);
             conectar.cerrar(rs);

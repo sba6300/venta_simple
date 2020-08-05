@@ -366,15 +366,17 @@ public class frm_ver_ventas extends javax.swing.JInternalFrame {
         if (busqueda.length() > 0) {
             if (jComboBox1.getSelectedIndex() == 0) {
                 busqueda = c_varios.formato_fecha_mysql(busqueda);
-                query = "select * from ventas "
-                        + "where fecha = '" + busqueda + "' "
-                        + "order by id asc";
+                query = "select v.id, v.fecha, v.hora, v.serie, v.numero, ds.abreviatura, v.doc_cliente, v.nom_cliente, v.total, v.estado "
+                        + "from ventas as v "
+                        + "inner join documento_sunat as ds on ds.id_tido = v.id_tido "
+                        + "where v.fecha = '" + busqueda + "'";
             }
 
             if (jComboBox1.getSelectedIndex() == 1) {
-                query = "select * from ventas "
-                        + "where nom_cliente = '%" + busqueda + "%' or doc_cliente like '%" + busqueda + "%' "
-                        + "order by fecha asc";
+                query = "select v.id, v.fecha, v.hora, v.serie, v.numero, ds.abreviatura, v.doc_cliente, v.nom_cliente, v.total, v.estado "
+                        + "from ventas as v "
+                        + "inner join documento_sunat as ds on ds.id_tido = v.id_tido "
+                        + "where v.nom_cliente = '%" + busqueda + "%' or v.doc_cliente like '%" + busqueda + "%'";
             }
             venta.verFilas(jTable1, query);
         }
@@ -391,8 +393,8 @@ public class frm_ver_ventas extends javax.swing.JInternalFrame {
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         GenerarResumen generate = new GenerarResumen(c_varios.getFechaActual());
         generate.generarArchivos();
-
-       /* GenerarFS generate = new GenerarFS(venta.getId());
+        venta.verFilas(jTable1, query);
+        /* GenerarFS generate = new GenerarFS(venta.getId());
         generate.generar_archivos();*/
     }//GEN-LAST:event_jButton7ActionPerformed
 
