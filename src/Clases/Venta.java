@@ -446,8 +446,9 @@ public class Venta {
                 }
             };
             Statement st = conectar.conexion();
-            String query = "SELECT strftime('%m', v.fecha) as nromes, sum(v.total) as suma "
+            String query = "SELECT m.nombre as nromes, sum(v.total) as suma "
                     + "FROM ventas AS v "
+                    + "inner join mes as m on m.id = strftime('%m', v.fecha) "
                     + "WHERE  strftime('%Y', v.fecha) = strftime('%Y', CURRENT_DATE) and v.estado != 3  "
                     + "group by strftime('%m', v.fecha) ";
             //System.out.println(query);
