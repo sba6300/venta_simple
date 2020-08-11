@@ -8,6 +8,7 @@ package Formularios;
 import Clases.Producto;
 import Clases.cl_varios;
 import Vistas.frm_ver_productos;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 
 /**
@@ -48,6 +49,7 @@ public class frm_reg_productos extends javax.swing.JDialog {
         txt_costo.setText("");
         txt_precio.setText("");
         producto.setId(0);
+        txt_codbarra.requestFocus();
     }
 
     /**
@@ -78,11 +80,30 @@ public class frm_reg_productos extends javax.swing.JDialog {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 txt_codbarraKeyTyped(evt);
             }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_codbarraKeyPressed(evt);
+            }
+        });
+
+        txt_nombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_nombreKeyPressed(evt);
+            }
         });
 
         txt_costo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txt_costo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_costoKeyPressed(evt);
+            }
+        });
 
         txt_precio.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txt_precio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txt_precioKeyPressed(evt);
+            }
+        });
 
         jLabel1.setText("Cod Barras:");
 
@@ -192,6 +213,38 @@ public class frm_reg_productos extends javax.swing.JDialog {
     private void txt_codbarraKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codbarraKeyTyped
         c_varios.limitar_caracteres(evt, txt_codbarra, 13);
     }//GEN-LAST:event_txt_codbarraKeyTyped
+
+    private void txt_codbarraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codbarraKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_codbarra.getText().length() > 0) {
+                txt_nombre.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txt_codbarraKeyPressed
+
+    private void txt_costoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_costoKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_costo.getText().length() > 0) {
+                txt_precio.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txt_costoKeyPressed
+
+    private void txt_nombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_nombreKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_nombre.getText().length() > 0) {
+                txt_costo.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txt_nombreKeyPressed
+
+    private void txt_precioKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_precioKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_precio.getText().length() > 0) {
+                jButton1.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_txt_precioKeyPressed
 
     /**
      * @param args the command line arguments

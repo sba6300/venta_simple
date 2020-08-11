@@ -393,4 +393,91 @@ public class Venta {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
+    
+     public void resumenVentasMes(JTable tabla) {
+        try {
+            DefaultTableModel mostrar = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int fila, int columna) {
+                    return false;
+                }
+            };
+            Statement st = conectar.conexion();
+            String query = "SELECT ds.nombre, sum(v.total) as suma FROM ventas AS v "
+                    + "inner join documento_sunat as ds on ds.id_tido = v.id_tido "
+                    + "WHERE  strftime('%Y%m', v.fecha) = strftime('%Y%m', CURRENT_DATE) and v.estado != 3 "
+                    + "group by v.id_tido ";
+            ResultSet rs = conectar.consulta(st, query);
+
+            RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mostrar);
+          //  tabla.setRowSorter(sorter);
+
+            mostrar.addColumn("Documento Venta");
+            mostrar.addColumn("Monto S/");
+
+            while (rs.next()) {
+
+                Object fila[] = new Object[2];
+
+                fila[0] = rs.getString("nombre");
+                fila[1] = c_varios.formato_totales(rs.getDouble("suma"));
+                mostrar.addRow(fila);
+            }
+
+            conectar.cerrar(st);
+            conectar.cerrar(rs);
+            tabla.setModel(mostrar);
+            tabla.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tabla.getColumnModel().getColumn(1).setPreferredWidth(40);
+            c_varios.derecha_celda(tabla, 1);
+            //tabla.setDefaultRenderer(Object.class, new render_tables.render_clientes());
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
+     
+     public void resumenVentasAño (JTable tabla) {
+        try {
+            DefaultTableModel mostrar = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int fila, int columna) {
+                    return false;
+                }
+            };
+            Statement st = conectar.conexion();
+            String query = "SELECT strftime('%m', v.fecha) as nromes, sum(v.total) as suma "
+                    + "FROM ventas AS v "
+                    + "WHERE  strftime('%Y', v.fecha) = strftime('%Y', CURRENT_DATE) and v.estado != 3  "
+                    + "group by strftime('%m', v.fecha) ";
+            //System.out.println(query);
+            ResultSet rs = conectar.consulta(st, query);
+
+            RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mostrar);
+          //  tabla.setRowSorter(sorter);
+
+            mostrar.addColumn("Mes");
+            mostrar.addColumn("Monto S/");
+
+            while (rs.next()) {
+
+                Object fila[] = new Object[2];
+
+                fila[0] = rs.getString("nromes");
+                fila[1] = c_varios.formato_totales(rs.getDouble("suma"));
+                mostrar.addRow(fila);
+            }
+
+            conectar.cerrar(st);
+            conectar.cerrar(rs);
+            tabla.setModel(mostrar);
+            tabla.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tabla.getColumnModel().getColumn(1).setPreferredWidth(40);
+            c_varios.derecha_celda(tabla, 1);
+            //tabla.setDefaultRenderer(Object.class, new render_tables.render_clientes());
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, ex);
+        }
+    }
 }
