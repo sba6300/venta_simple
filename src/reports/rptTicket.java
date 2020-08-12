@@ -27,10 +27,10 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import java.awt.Desktop;
+import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -39,20 +39,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.print.Doc;
-import javax.print.DocFlavor;
-import javax.print.DocPrintJob;
 import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.print.SimpleDoc;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.Sides;
 import javax.swing.JOptionPane;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.printing.PDFPageable;
 
 /**
  *
@@ -93,7 +86,7 @@ public class rptTicket {
     }
 
     public void generarTicket() throws FileNotFoundException, DocumentException, BadElementException, IOException, SQLException, PrintException, PrinterException {
-        Rectangle pagesize = new Rectangle(227f, 720f);
+        Rectangle pagesize = new Rectangle(200f, 720f);
         Document documento = new Document(pagesize);
         documento.setMargins(11, 11, 11, 11);
 
@@ -267,6 +260,7 @@ public class rptTicket {
     }
 
     public void imprimir(String archivo) throws PrinterException, IOException, PrintException {
+        /*
         DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
         PrintRequestAttributeSet patts = new HashPrintRequestAttributeSet();
         patts.add(Sides.DUPLEX);
@@ -284,5 +278,22 @@ public class rptTicket {
         DocPrintJob printJob = defaultPrintService.createPrintJob();
         printJob.print(pdfDoc, new HashPrintRequestAttributeSet());
         fis.close();
+        
+         */
+
+        // Indicamos el nombre del archivo Pdf que deseamos imprimir
+        PDDocument document = PDDocument.load(new File(archivo));
+
+        PrinterJob job = PrinterJob.getPrinterJob();
+
+        LOGGER.log(Level.INFO, "Mostrando el dialogo de impresion");
+//        if (job.printDialog() == true) {  
+        PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
+        job.setPrintService(defaultPrintService);
+        job.setPageable(new PDFPageable(document));
+
+        LOGGER.log(Level.INFO, "Imprimiendo documento");
+        job.print();
+        //       }
     }
 }
