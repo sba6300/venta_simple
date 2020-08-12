@@ -160,7 +160,7 @@ public class VentaProducto {
                         + "ICBPER|"
                         + "OTH|"
                         + "0|"
-                        + c_varios.formato_numero(rs.getDouble("precio")) + "|"  //precioventaunit
+                        + c_varios.formato_numero(rs.getDouble("precio")) + "|" //precioventaunit
                         + c_varios.formato_numero(base) + "|"
                         + "0.0000000000\n";
             }
@@ -176,7 +176,8 @@ public class VentaProducto {
         return det;
     }
 
-    public void verVentas(JTable tabla) {
+    public double verVentas(JTable tabla) {
+        double totalito = 0;
         try {
             DefaultTableModel mostrar = new DefaultTableModel() {
                 @Override
@@ -185,14 +186,15 @@ public class VentaProducto {
                 }
             };
             Statement st = conectar.conexion();
-            String query = "SELECT v.fecha, sum(v.total) as suma FROM ventas_productos AS pv "
-                    + "INNER JOIN ventas AS v ON v.id = pv.id_ventas "
-                    + "WHERE  strftime('%m', v.fecha) = strftime('%m', CURRENT_DATE) "
+            String query = "SELECT v.fecha, sum(v.total) as suma "
+                    + "from ventas AS v "
+                    + "WHERE  strftime('%Y%m', v.fecha) = strftime('%Y%m', CURRENT_DATE) and v.estado != 3 "
                     + "group by v.fecha ";
+            //System.out.println(query);
             ResultSet rs = conectar.consulta(st, query);
 
             RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mostrar);
-            tabla.setRowSorter(sorter);
+            //tabla.setRowSorter(sorter);
 
             mostrar.addColumn("Dia");
             mostrar.addColumn("Venta");
@@ -204,6 +206,8 @@ public class VentaProducto {
                 fila[0] = c_varios.formato_fecha_vista(rs.getString("fecha"));
                 fila[1] = c_varios.formato_totales(rs.getDouble("suma"));
                 mostrar.addRow(fila);
+                
+                totalito += rs.getDouble("suma");
             }
 
             conectar.cerrar(st);
@@ -218,6 +222,7 @@ public class VentaProducto {
             System.out.println(ex);
             JOptionPane.showMessageDialog(null, ex);
         }
+        return totalito;
     }
 
     public void verFilas(JTable tabla) {

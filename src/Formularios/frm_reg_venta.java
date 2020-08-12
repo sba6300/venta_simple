@@ -12,13 +12,23 @@ import Clases.VentaProducto;
 import Clases.cl_varios;
 import Controller.GenerarFS;
 import Printer.Print_Venta_Nota;
+import com.lowagie.text.BadElementException;
+import com.lowagie.text.DocumentException;
 import java.awt.event.KeyEvent;
+import java.awt.print.PrinterException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.print.PrintException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import json.cl_json_entidad;
 import models.m_tido;
 import objects.tido;
 import org.json.simple.parser.ParseException;
+import reports.rptTicket;
 
 /**
  *
@@ -185,6 +195,7 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
         jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
         setTitle("Agregar Venta");
 
@@ -520,26 +531,32 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txt_codbarraKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codbarraKeyPressed
-        if (txt_codbarra.getText().length() > 5) {
-            producto.setCodbarra(txt_codbarra.getText().trim());
-            if (producto.buscarBarra()) {
-                if (valida_tabla(producto.getId())) {
-                    producto.obtenerDatos();
-                    txt_producto.setText(producto.getNombre());
-                    txt_venta.setText(c_varios.formato_precio(producto.getPrecio()));
-                    txt_parcial.setText(c_varios.formato_precio(producto.getPrecio()));
-                    txt_cant.setText("1");
-                    txt_cant.requestFocus();
-                    txt_cant.selectAll();
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (txt_codbarra.getText().length() > 5) {
+                producto.setCodbarra(txt_codbarra.getText().trim());
+                if (producto.buscarBarra()) {
+                    if (valida_tabla(producto.getId())) {
+                        producto.obtenerDatos();
+                        txt_producto.setText(producto.getNombre());
+                        txt_venta.setText(c_varios.formato_precio(producto.getPrecio()));
+                        txt_parcial.setText(c_varios.formato_precio(producto.getPrecio()));
+                        txt_cant.setText("1");
+                        txt_cant.requestFocus();
+                        txt_cant.selectAll();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "CODIGO DE BARRAS NO ENCONTRADO");
                 }
-            }
 
+            } else {
+                JOptionPane.showMessageDialog(null, "CODIGO DE BARRAS ES MENOR A 6 CINCO DIGITOS");
+            }
         }
     }//GEN-LAST:event_txt_codbarraKeyPressed
 
     private void txt_codbarraKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_codbarraKeyTyped
         c_varios.solo_numeros(evt);
-        c_varios.limitar_caracteres(evt, txt_codbarra, 13);
+        c_varios.limitar_caracteres(evt, txt_codbarra, 14);
     }//GEN-LAST:event_txt_codbarraKeyTyped
 
     private void txt_cantKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_cantKeyPressed
@@ -608,8 +625,17 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
 
             this.dispose();
 
-            printing.setId_venta(venta.getId());
-            // printing.generar_ticket();
+            //proceso para imprimir ticket
+            try {
+                rptTicket ticket = new rptTicket(venta.getId());
+                ticket.generarTicket();
+
+            } catch (FileNotFoundException | DocumentException ex) {
+                System.out.println(ex.getLocalizedMessage());
+            } catch (IOException | SQLException | PrintException | PrinterException ex) {
+                System.out.println(ex.getLocalizedMessage());
+            }
+
             if (venta.getIdtido() == 3) {
                 GenerarFS generate = new GenerarFS(venta.getId());
                 generate.generar_archivos();

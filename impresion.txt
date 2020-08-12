@@ -6,20 +6,20 @@ XXXAA
                                         
            SUCURSAL: CHIMBOTE           
              NOTA DE VENTA              
-             001 - 0000012              
-FECHA EMISION: 01:52:43                 
-CLIENTE DOC:                            
-LUISITO                                 
+             001 - 0000003              
+FECHA EMISION: 16:27:26                 
+CLIENTE DOC: 46993209                   
+OYANGUREN GIRON LUIS                    
                                         
-5 PAPA LAYS NORMAL           x      2.50
-5 PAPA LAYS NORMAL           x      2.50
+2 PAPA LAYS NORMAL           x      1.00
+3 GALLETA 1                  x      6.00
                                         
-                     SUB TOTAL      4.24
-                           IGV      0.76
-                         TOTAL      5.00
+                     SUB TOTAL      5.93
+                           IGV      1.07
+                         TOTAL      7.00
                                         
-CINCO 0/100 SOLES                       
-                 CANJEAR POR:    NINGUNO
+SIETE 0/100 SOLES                       
+                 CANJEAR POR:     BOLETA
                                         
 Su boleta/factura será enviada a su corr
 eo electrónico                          
