@@ -10,8 +10,10 @@ import Clases.Venta;
 import Clases.VentaProducto;
 import Clases.cl_conectar;
 import Clases.cl_varios;
+import Formularios.frm_reg_caja;
 import Formularios.frm_reg_empresa;
 import Formularios.frm_reg_venta;
+import Vistas.frm_ver_caja;
 import Vistas.frm_ver_documentos;
 import Vistas.frm_ver_productos;
 import Vistas.frm_ver_ventas;
@@ -107,11 +109,13 @@ public class frm_menu extends javax.swing.JFrame {
         jButton8 = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
         jButton4 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jButton1 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jButton6 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
         jToolBar2 = new javax.swing.JToolBar();
         jButton5 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -223,6 +227,18 @@ public class frm_menu extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton4);
+
+        jButton10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/Sales-by-payment-method-icon.png"))); // NOI18N
+        jButton10.setText("Retirar Dinero");
+        jButton10.setFocusable(false);
+        jButton10.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton10.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton10);
         jToolBar1.add(jSeparator1);
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/inventory_management-512.png"))); // NOI18N
@@ -261,6 +277,18 @@ public class frm_menu extends javax.swing.JFrame {
             }
         });
         jToolBar1.add(jButton6);
+
+        jButton9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/iconos/seo_web-68-512.png"))); // NOI18N
+        jButton9.setText("Caja Chica");
+        jButton9.setFocusable(false);
+        jButton9.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton9.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButton9);
 
         jToolBar2.setFloatable(false);
 
@@ -496,6 +524,18 @@ public class frm_menu extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        Frame f = JOptionPane.getRootFrame();
+        frm_reg_caja dialog = new frm_reg_caja(f, true);
+        dialog.setLocationRelativeTo(null);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        frm_ver_caja formulario = new frm_ver_caja();
+        c_varios.llamar_ventana(formulario);
+    }//GEN-LAST:event_jButton9ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -533,6 +573,7 @@ public class frm_menu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -540,6 +581,7 @@ public class frm_menu extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     public static javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JFormattedTextField jFormattedTextField1;

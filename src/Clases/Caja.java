@@ -8,6 +8,12 @@ package Clases;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowSorter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -99,8 +105,8 @@ public class Caja {
                 existe = true;
                 this.venta = rs.getDouble("ventas");
                 this.salida = rs.getDouble("egresos");
-                this.inicio = rs.getDouble("cuadre");
-                this.cierre = rs.getDouble("apertura");
+                this.inicio = rs.getDouble("apertura");
+                this.cierre = rs.getDouble("cuadre");
             }
             conectar.cerrar(rs);
             conectar.cerrar(st);
@@ -108,5 +114,53 @@ public class Caja {
             System.out.println(ex.getLocalizedMessage());
         }
         return existe;
+    }
+    
+    public void verFilas(JTable tabla, String query) {
+        try {
+            DefaultTableModel mostrar = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int fila, int columna) {
+                    return false;
+                }
+            };
+            Statement st = conectar.conexion();
+            ResultSet rs = conectar.consulta(st, query);
+
+            RowSorter<TableModel> sorter = new TableRowSorter<>(mostrar);
+            tabla.setRowSorter(sorter);
+
+            mostrar.addColumn("Fecha");
+            mostrar.addColumn("Apertura");
+            mostrar.addColumn("Venta");
+            mostrar.addColumn("Egresos");
+            mostrar.addColumn("Cierre");
+
+            while (rs.next()) {
+
+                Object fila[] = new Object[5];
+
+                fila[0] = rs.getString("fecha");
+                fila[1] = rs.getString("apertura");
+                fila[2] = rs.getString("ventas");
+                fila[3] = rs.getString("egresos");
+                fila[4] = rs.getString("cuadre");
+                mostrar.addRow(fila);
+            }
+
+            conectar.cerrar(st);
+            conectar.cerrar(rs);
+            tabla.setModel(mostrar);
+            varios.centrar_celda(tabla, 0);
+            varios.derecha_celda(tabla, 1);
+            varios.derecha_celda(tabla, 2);
+            varios.derecha_celda(tabla, 3);
+            varios.derecha_celda(tabla, 4);
+
+            //tabla.setDefaultRenderer(Object.class, new render_tables.render_clientes());
+        } catch (SQLException ex) {
+            System.out.println(ex);
+            JOptionPane.showMessageDialog(null, ex);
+        }
     }
 }
