@@ -27,7 +27,6 @@ import com.lowagie.text.Rectangle;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
-import static com.sun.xml.internal.ws.spi.db.BindingContextFactory.LOGGER;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -285,14 +284,14 @@ public class rptTicket {
         PDDocument document = PDDocument.load(new File(archivo));
 
         PrinterJob job = PrinterJob.getPrinterJob();
-
-        LOGGER.log(Level.INFO, "Mostrando el dialogo de impresion");
+        System.out.println("Mostrando el dialogo de impresion");
+        //LOGGER.log(Level.INFO, "Mostrando el dialogo de impresion");
 //        if (job.printDialog() == true) {  
-        PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
-        job.setPrintService(defaultPrintService);
+       // PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
+        //job.setPrintService(defaultPrintService);
         job.setPageable(new PDFPageable(document));
-
-        LOGGER.log(Level.INFO, "Imprimiendo documento");
+        System.out.println("Imprimiendo documento");
+        //LOGGER.log(Level.INFO, "Imprimiendo documento");
         job.print();
         //       }
     }

@@ -10,18 +10,12 @@ import Clases.Venta;
 import Clases.VentaAnulada;
 import Clases.VentaProducto;
 import Clases.cl_varios;
-import Controller.GenerarFS;
 import Controller.GenerarResumen;
-import Printer.Print_Venta_Nota;
-import Printer.varios_impresion;
-import com.lowagie.text.BadElementException;
 import com.lowagie.text.DocumentException;
 import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.PrintException;
 import reports.rptTicket;
 
