@@ -10,19 +10,11 @@ import Clases.Venta;
 import Clases.VentaAnulada;
 import Clases.VentaProducto;
 import Clases.cl_varios;
-import Controller.GenerarFS;
 import Controller.GenerarResumen;
-import Printer.Print_Venta_Nota;
-import Printer.varios_impresion;
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 import java.awt.print.PrinterException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.print.PrintException;
 import reports.rptTicket;
 
 /**
@@ -460,21 +452,15 @@ public class frm_ver_ventas extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
         try {
             rptTicket ticket = new rptTicket(venta.getId());
             ticket.generarTicket();
-
-//        Print_Venta_Nota printing = new Print_Venta_Nota();
-//        printing.setId_venta(venta.getId());
-//        printing.generar_ticket();
-//        jButton3.setEnabled(false);
-        } catch (FileNotFoundException | DocumentException ex) {
-            System.out.println(ex.getLocalizedMessage());
-        } catch (IOException | SQLException ex) {
-            System.out.println(ex.getLocalizedMessage());
-        } catch (PrintException | PrinterException ex) {
+        } catch (DocumentException | IOException | SQLException | PrinterException ex) {
             System.out.println(ex.getLocalizedMessage());
         }
+
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

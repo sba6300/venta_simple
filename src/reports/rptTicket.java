@@ -11,22 +11,21 @@ import Clases.Venta;
 import Clases.VentaProducto;
 import Clases.cl_conectar;
 import Clases.cl_varios;
-import Printer.PrinterService;
 import Printer.leer_numeros;
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.Chunk;
-import com.lowagie.text.Document;
-import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Font;
-import com.lowagie.text.FontFactory;
-import com.lowagie.text.Image;
-import com.lowagie.text.Paragraph;
-import com.lowagie.text.Phrase;
-import com.lowagie.text.Rectangle;
-import com.lowagie.text.pdf.PdfPCell;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Rectangle;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
@@ -38,11 +37,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
-import javax.swing.JOptionPane;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.printing.PDFPageable;
 
@@ -84,8 +80,8 @@ public class rptTicket {
         this.idventa = idventa;
     }
 
-    public void generarTicket() throws FileNotFoundException, DocumentException, BadElementException, IOException, SQLException, PrintException, PrinterException {
-        Rectangle pagesize = new Rectangle(200f, 720f);
+    public void generarTicket() throws FileNotFoundException, DocumentException, BadElementException, IOException, SQLException, PrinterException {
+        Rectangle pagesize = new Rectangle(200f, 1080f);
         Document documento = new Document(pagesize);
         documento.setMargins(11, 11, 11, 11);
 
@@ -108,7 +104,8 @@ public class rptTicket {
         // Se abre el documento.
         documento.open();
 
-        Font font = FontFactory.getFont("Arial Narrow", 10);
+        Font font = FontFactory.getFont("Helvetica", 9F, Font.NORMAL);
+        //  PdfFont font = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
 
         imagen.setAlignment(Element.ALIGN_CENTER);
 
@@ -127,6 +124,7 @@ public class rptTicket {
         documento.add(linea1);
 
         linea1 = new Paragraph(empresa.getDireccion(), font);
+        linea1.setAlignment(Element.ALIGN_CENTER);
         documento.add(linea1);
 
         documento.add(new Paragraph(Chunk.NEWLINE));
@@ -246,19 +244,22 @@ public class rptTicket {
         linea1 = new Paragraph(empresa.getLinea2(), font);
         linea1.setAlignment(Element.ALIGN_CENTER);
         documento.add(linea1);
+
+        documento.add(new Paragraph(Chunk.NEWLINE));
+        // documento.add(new Paragraph(Chunk.NEWLINE));
+
+        linea1 = new Paragraph("_", font);
+        linea1.setAlignment(Element.ALIGN_CENTER);
+        documento.add(linea1);
+
         documento.close();
-        try {
-            File file = new File(direccion + File.separator + "temp" + File.separator + "ticket_" + fechahora + ".pdf");
-            imprimir(file.toString());
-            //Desktop.getDesktop().open(file);
-        } catch (IOException e) {
-            System.out.print(e + " -- error io");
-            JOptionPane.showMessageDialog(null, "Error al Generar el PDF -- \n" + e.getLocalizedMessage());
-        }
+        File file = new File(direccion + File.separator + "temp" + File.separator + "ticket_" + fechahora + ".pdf");
+        imprimir(file.toString());
+        //Desktop.getDesktop().open(file);
 
     }
 
-    public void imprimir(String archivo) throws PrinterException, IOException, PrintException {
+    public void imprimir(String archivo) throws IOException, PrinterException {
         /*
         DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
         PrintRequestAttributeSet patts = new HashPrintRequestAttributeSet();
@@ -292,7 +293,7 @@ public class rptTicket {
         job.setPageable(new PDFPageable(document));
         System.out.println("Imprimiendo document");
         // LOGGER.log(Level.INFO, "Imprimiendo documento");
-        job.print();
+        //job.print();
         //       }
     }
 }
