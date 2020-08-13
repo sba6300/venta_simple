@@ -12,8 +12,7 @@ import Clases.VentaProducto;
 import Clases.cl_varios;
 import Controller.GenerarFS;
 import Printer.Print_Venta_Nota;
-import com.lowagie.text.BadElementException;
-import com.lowagie.text.DocumentException;
+import com.itextpdf.text.DocumentException;
 import java.awt.event.KeyEvent;
 import java.awt.print.PrinterException;
 import java.io.FileNotFoundException;
@@ -139,6 +138,7 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
                 if (producto == id_producto_fila) {
                     cuenta_iguales++;
                     JOptionPane.showMessageDialog(null, "El Producto a Ingresar ya existe en la lista");
+                    limpiar();
                 }
             }
 
@@ -626,13 +626,10 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
             this.dispose();
 
             //proceso para imprimir ticket
+            rptTicket ticket = new rptTicket(venta.getId());
             try {
-                rptTicket ticket = new rptTicket(venta.getId());
                 ticket.generarTicket();
-
-            } catch (FileNotFoundException | DocumentException ex) {
-                System.out.println(ex.getLocalizedMessage());
-            } catch (IOException | SQLException | PrintException | PrinterException ex) {
+            } catch (DocumentException | IOException | SQLException | PrinterException ex) {
                 System.out.println(ex.getLocalizedMessage());
             }
 
@@ -722,6 +719,7 @@ public class frm_reg_venta extends javax.swing.JInternalFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         jButton3.setEnabled(false);
         modelo.removeRow(fila_seleccionada);
+        calcularTotal();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
