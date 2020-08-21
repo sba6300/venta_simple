@@ -293,7 +293,7 @@ public class rptTicket {
         job.setPageable(new PDFPageable(document));
         System.out.println("Imprimiendo document");
         // LOGGER.log(Level.INFO, "Imprimiendo documento");
-        //job.print();
+        job.print();
         //       }
     }
 }
